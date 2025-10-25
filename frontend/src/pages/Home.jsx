@@ -15,7 +15,6 @@ const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     setIsVisible(true);
@@ -29,10 +28,7 @@ const Home = () => {
       const response = await axios.post(`${API}/contact`, formData);
       
       if (response.data.success) {
-        toast({
-          title: "Úspech!",
-          description: response.data.message,
-        });
+        toast.success(response.data.message);
         setFormData({ name: '', email: '', phone: '', message: '' });
       }
     } catch (error) {
@@ -40,11 +36,7 @@ const Home = () => {
         || error.response?.data?.message 
         || "Niečo sa pokazilo. Skúste to prosím znova.";
       
-      toast({
-        title: "Chyba",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
