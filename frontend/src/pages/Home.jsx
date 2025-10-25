@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
-import { useToast } from '../hooks/use-toast';
+import toast from 'react-hot-toast';
 import { companyInfo } from '../mock';
 import axios from 'axios';
 
