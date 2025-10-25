@@ -32,9 +32,21 @@ const Home = () => {
         setFormData({ name: '', email: '', phone: '', message: '' });
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.detail?.message 
-        || error.response?.data?.message 
-        || "Niečo sa pokazilo. Skúste to prosím znova.";
+      let errorMessage = "Niečo sa pokazilo. Skúste to prosím znova.";
+      
+      if (error.response?.data?.detail) {
+        // Handle FastAPI validation errors
+        if (Array.isArray(error.response.data.detail)) {
+          const firstError = error.response.data.detail[0];
+          if (firstError?.msg) {
+            errorMessage = firstError.msg;
+          }
+        } else if (error.response.data.detail.message) {
+          errorMessage = error.response.data.detail.message;
+        }
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
       
       toast.error(errorMessage);
     } finally {
