@@ -5,7 +5,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '..
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { useToast } from '../hooks/use-toast';
-import { mockContactFormSubmit, companyInfo } from '../mock';
+import { companyInfo } from '../mock';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
