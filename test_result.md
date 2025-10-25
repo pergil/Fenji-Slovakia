@@ -123,15 +123,18 @@ backend:
 frontend:
   - task: "Contact form with backend integration"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/pages/Home.jsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Replaced mockContactFormSubmit with actual axios call to POST /api/contact. Form validates and sends name, email, phone, message. Displays success/error toasts. Clears form on success. Ready for frontend testing."
+      - working: false
+        agent: "testing"
+        comment: "COMPREHENSIVE FRONTEND TESTING COMPLETED - CRITICAL ISSUE FOUND: Toast notification system is not working. Backend integration is functional (API calls successful: 200 for valid data, 422 for validation errors), form validation works (HTML5 validation visible), form clears after submission, but Sonner toast notifications are not rendering in DOM. All other functionality works: ✅ Navigation links (O nás, Služby, Prepravný poriadok, Kontakt), ✅ Accordion expand/collapse, ✅ Responsive design on mobile (375x667), ✅ Form fields accessible and functional, ✅ Backend API integration, ✅ Form clearing after submission. ISSUE: Toaster component from Sonner library not rendering despite being imported in App.js. Attempted fixes: removed next-themes dependency, simplified Toaster configuration, created missing utils.js file. Root cause appears to be Sonner library compatibility issue with current React setup."
 
 metadata:
   created_by: "main_agent"
