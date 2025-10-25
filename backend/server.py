@@ -110,6 +110,60 @@ async def get_status_checks():
     
     return status_checks
 
+# Contact Form Endpoints
+@api_router.post("/contact")
+async def create_contact_message(input: ContactMessageCreate):
+    try:
+        # Create ContactMessage object
+        contact_dict = input.model_dump()
+        contact_obj = ContactMessage(**contact_dict)
+        
+        # Convert to dict and serialize datetime to ISO string for MongoDB
+        doc = contact_obj.model_dump()
+        doc['created_at'] = doc['created_at'].isoformat()
+        
+        # Insert into MongoDB
+        result = await db.contact_messages.insert_one(doc)
+        
+        logger.info(f"New contact message received from {contact_obj.email}")
+        
+        return {
+            "success": True,
+            "message": "Vaša správa bola úspešne odoslaná. Ozveme sa vám čoskoro!",
+            "id": contact_obj.id
+        }
+    except ValueError as e:
+        logger.error(f"Validation error: {str(e)}")
+        raise HTTPException(status_code=400, detail={
+            "success": False,
+            "message": f"Chyba: {str(e)}"
+        })
+    except Exception as e:
+        logger.error(f"Error creating contact message: {str(e)}")
+        raise HTTPException(status_code=500, detail={
+            "success": False,
+            "message": "Chyba servera. Skúste to prosím znova."
+        })
+
+@api_router.get("/contact", response_model=List[ContactMessage])
+async def get_contact_messages():
+    try:
+        # Exclude MongoDB's _id field from the query results
+        messages = await db.contact_messages.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+        
+        # Convert ISO string timestamps back to datetime objects
+        for msg in messages:
+            if isinstance(msg['created_at'], str):
+                msg['created_at'] = datetime.fromisoformat(msg['created_at'])
+        
+        return messages
+    except Exception as e:
+        logger.error(f"Error fetching contact messages: {str(e)}")
+        raise HTTPException(status_code=500, detail={
+            "success": False,
+            "message": "Chyba pri načítaní správ"
+        })
+
 # Include the router in the main app
 app.include_router(api_router)
 
