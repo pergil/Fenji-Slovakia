@@ -121,6 +121,91 @@ async def get_status_checks():
     
     return status_checks
 
+# Email sending function
+async def send_email_notification(contact_data: ContactMessage):
+    """Send email notification when a new contact form is submitted"""
+    try:
+        # Create email message
+        message = MIMEMultipart('alternative')
+        message['Subject'] = f'Nová správa z kontaktného formulára - {contact_data.name}'
+        message['From'] = SMTP_FROM_EMAIL
+        message['To'] = SMTP_TO_EMAIL
+        
+        # Create HTML email body
+        html_body = f"""
+        <html>
+            <head>
+                <style>
+                    body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                    .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                    .header {{ background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }}
+                    .content {{ background-color: #ffffff; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px; }}
+                    .field {{ margin-bottom: 15px; }}
+                    .label {{ font-weight: bold; color: #555; }}
+                    .value {{ color: #333; margin-top: 5px; }}
+                    .footer {{ margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666; font-size: 12px; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2 style="margin: 0; color: #333;">Nová správa z kontaktného formulára</h2>
+                        <p style="margin: 5px 0 0 0; color: #666;">FENJI Slovakia s.r.o.</p>
+                    </div>
+                    
+                    <div class="content">
+                        <div class="field">
+                            <div class="label">Meno:</div>
+                            <div class="value">{contact_data.name}</div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="label">Email:</div>
+                            <div class="value"><a href="mailto:{contact_data.email}">{contact_data.email}</a></div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="label">Telefón:</div>
+                            <div class="value">{contact_data.phone if contact_data.phone else 'Neuvedené'}</div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="label">Správa:</div>
+                            <div class="value" style="white-space: pre-wrap;">{contact_data.message}</div>
+                        </div>
+                        
+                        <div class="footer">
+                            <p>Dátum prijatia: {contact_data.created_at.strftime('%d.%m.%Y %H:%M:%S')}</p>
+                            <p>ID správy: {contact_data.id}</p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+        </html>
+        """
+        
+        # Attach HTML body
+        html_part = MIMEText(html_body, 'html', 'utf-8')
+        message.attach(html_part)
+        
+        # Send email using SSL
+        await aiosmtplib.send(
+            message,
+            hostname=SMTP_SERVER,
+            port=SMTP_PORT,
+            username=SMTP_USERNAME,
+            password=SMTP_PASSWORD,
+            use_tls=True,
+        )
+        
+        logger.info(f"Email notification sent successfully to {SMTP_TO_EMAIL}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Failed to send email notification: {str(e)}")
+        # Don't fail the entire request if email fails
+        return False
+
 # Contact Form Endpoints
 @api_router.post("/contact")
 async def create_contact_message(input: ContactMessageCreate):
@@ -137,6 +222,12 @@ async def create_contact_message(input: ContactMessageCreate):
         result = await db.contact_messages.insert_one(doc)
         
         logger.info(f"New contact message received from {contact_obj.email}")
+        
+        # Send email notification (async, don't wait for it to complete)
+        try:
+            await send_email_notification(contact_obj)
+        except Exception as email_error:
+            logger.error(f"Email notification failed but message was saved: {str(email_error)}")
         
         return {
             "success": True,
