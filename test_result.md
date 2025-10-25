@@ -131,7 +131,7 @@ frontend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Replaced mockContactFormSubmit with actual axios call to POST /api/contact. Form validates and sends name, email, phone, message. Displays success/error toasts. Clears form on success."
+        comment: "Replaced mockContactFormSubmit with actual axios call to POST /api/contact. Form validates and sends name, email, phone, message. Displays success/error toasts. Clears form on success. Ready for frontend testing."
 
 metadata:
   created_by: "main_agent"
