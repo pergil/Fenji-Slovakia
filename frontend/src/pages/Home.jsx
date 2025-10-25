@@ -63,24 +63,42 @@ const Home = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className={`transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h1 className="text-6xl md:text-7xl font-bold tracking-tight mb-6">
-              <span className="inline-block animate-fade-in">Spoľahlivá</span>
-              <br />
-              <span className="inline-block animate-fade-in-delay text-gray-400">preprava po celej EU</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12 animate-fade-in-delay-2">
-              Profesionálne prepravné služby dodávkovými vozidlami do 3,5 tuny. Rýchlo, bezpečne a efektívne.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-3">
-              <Button size="lg" className="text-base px-8 py-6 rounded-full hover-lift" onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}>
-                Získať cenovú ponuku
-              </Button>
-              <Button size="lg" variant="outline" className="text-base px-8 py-6 rounded-full hover-lift" onClick={() => document.getElementById('about').scrollIntoView({ behavior: 'smooth' })}>
-                Zistiť viac
-              </Button>
+      <section className="pt-32 pb-20 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className={`transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+                <span className="inline-block animate-fade-in">Spoľahlivá</span>
+                <br />
+                <span className="inline-block animate-fade-in-delay text-gray-400">preprava po celej EU</span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-600 mb-8 animate-fade-in-delay-2">
+                Profesionálne prepravné služby dodávkovými vozidlami do 3,5 tuny. Rýchlo, bezpečne a efektívne.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-delay-3">
+                <Button size="lg" className="text-base px-8 py-6 rounded-full hover-lift" onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}>
+                  Získať cenovú ponuku
+                </Button>
+                <Button size="lg" variant="outline" className="text-base px-8 py-6 rounded-full hover-lift" onClick={() => document.getElementById('about').scrollIntoView({ behavior: 'smooth' })}>
+                  Zistiť viac
+                </Button>
+              </div>
+            </div>
+            
+            {/* Right Image */}
+            <div className={`relative transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+              <div className="hero-image-wrapper relative rounded-3xl overflow-hidden shadow-2xl">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_eu-delivery/artifacts/if0u6r9l_doda%CC%81vky2.jpeg" 
+                  alt="FENJI Slovakia dodávky" 
+                  className="w-full h-auto object-cover hero-image"
+                />
+                {/* Subtle overlay for depth */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
+              </div>
+              {/* Decorative element */}
+              <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gray-100 rounded-3xl blur-3xl opacity-50"></div>
             </div>
           </div>
         </div>
