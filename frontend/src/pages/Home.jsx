@@ -26,16 +26,23 @@ const Home = () => {
     setIsSubmitting(true);
     
     try {
-      const result = await mockContactFormSubmit(formData);
-      toast({
-        title: "Úspech!",
-        description: result.message,
-      });
-      setFormData({ name: '', email: '', phone: '', message: '' });
+      const response = await axios.post(`${API}/contact`, formData);
+      
+      if (response.data.success) {
+        toast({
+          title: "Úspech!",
+          description: response.data.message,
+        });
+        setFormData({ name: '', email: '', phone: '', message: '' });
+      }
     } catch (error) {
+      const errorMessage = error.response?.data?.detail?.message 
+        || error.response?.data?.message 
+        || "Niečo sa pokazilo. Skúste to prosím znova.";
+      
       toast({
         title: "Chyba",
-        description: "Niečo sa pokazilo. Skúste to prosím znova.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
