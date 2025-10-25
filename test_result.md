@@ -101,3 +101,49 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Vytvorenie landing page pre dopravnú firmu FENJI Slovakia s prepravným poriadkom a kontaktným formulárom. Backend implementácia pre ukladanie kontaktných správ do MongoDB."
+
+backend:
+  - task: "Contact form API endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented POST /api/contact endpoint with ContactMessage model. Validates name (2-100 chars), email (EmailStr), phone (optional, Slovak format), message (10-1000 chars). Saves to MongoDB contact_messages collection. Returns success message in Slovak. Also implemented GET /api/contact for retrieving all messages."
+
+frontend:
+  - task: "Contact form with backend integration"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Home.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Replaced mockContactFormSubmit with actual axios call to POST /api/contact. Form validates and sends name, email, phone, message. Displays success/error toasts. Clears form on success."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Contact form API endpoint"
+    - "Contact form with backend integration"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Backend contact form API implemented with validation. Frontend integrated with axios. Ready for backend testing with curl commands. Test scenarios: valid submission, invalid email, missing fields, invalid phone format, message too short/long."
