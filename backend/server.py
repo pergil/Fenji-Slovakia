@@ -10,6 +10,9 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import re
+import aiosmtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 
 ROOT_DIR = Path(__file__).parent
@@ -19,6 +22,14 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# SMTP Configuration
+SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.hostinger.com')
+SMTP_PORT = int(os.environ.get('SMTP_PORT', 465))
+SMTP_USERNAME = os.environ.get('SMTP_USERNAME', '')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
+SMTP_FROM_EMAIL = os.environ.get('SMTP_FROM_EMAIL', '')
+SMTP_TO_EMAIL = os.environ.get('SMTP_TO_EMAIL', '')
 
 # Create the main app without a prefix
 app = FastAPI()
