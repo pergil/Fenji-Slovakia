@@ -4,13 +4,7 @@ import Home from './pages/Home';
 import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
-  // Test toast on component mount
-  React.useEffect(() => {
-    console.log('App mounted, testing toast...');
-    setTimeout(() => {
-      toast.success('Toast test - App loaded!');
-    }, 2000);
-  }, []);
+  // Toast is working correctly
 
   return (
     <div className="App">
