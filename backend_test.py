@@ -228,14 +228,14 @@ def test_contact_api():
         print(f"Status Code: {response.status_code}")
         print(f"Response: {response.text}")
         
-        if response.status_code == 400:  # Custom validation error
+        if response.status_code == 422:  # Validation error (Pydantic converts ValueError to 422)
             print("✅ PASSED: Invalid phone format correctly rejected")
             test_results["passed"] += 1
             test_results["tests"].append({"test": "Invalid phone validation", "status": "PASSED"})
         else:
-            print("❌ FAILED: Should have returned 400 for invalid phone")
+            print("❌ FAILED: Should have returned 422 for invalid phone")
             test_results["failed"] += 1
-            test_results["tests"].append({"test": "Invalid phone validation", "status": "FAILED", "reason": f"Expected 400, got {response.status_code}"})
+            test_results["tests"].append({"test": "Invalid phone validation", "status": "FAILED", "reason": f"Expected 422, got {response.status_code}"})
     except Exception as e:
         print(f"❌ FAILED: Exception - {str(e)}")
         test_results["failed"] += 1
