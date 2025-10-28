@@ -10,9 +10,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import re
-import aiosmtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import resend
 
 
 ROOT_DIR = Path(__file__).parent
@@ -23,13 +21,13 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# SMTP Configuration
-SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.hostinger.com')
-SMTP_PORT = int(os.environ.get('SMTP_PORT', 465))
-SMTP_USERNAME = os.environ.get('SMTP_USERNAME', '')
-SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
-SMTP_FROM_EMAIL = os.environ.get('SMTP_FROM_EMAIL', '')
-SMTP_TO_EMAIL = os.environ.get('SMTP_TO_EMAIL', '')
+# Resend Email Configuration
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
+SENDER_EMAIL = os.environ.get('SMTP_FROM_EMAIL', 'info@fenjislovakia.eu')
+RECIPIENT_EMAIL = os.environ.get('SMTP_TO_EMAIL', 'info@fenjislovakia.eu')
+
+# Initialize Resend
+resend.api_key = RESEND_API_KEY
 
 # Create the main app without a prefix
 app = FastAPI()
