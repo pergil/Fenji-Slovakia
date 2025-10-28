@@ -193,11 +193,6 @@ async def send_email_notification(contact_data: ContactMessage):
         logger.error(f"Failed to send email notification via Resend: {str(e)}")
         # Don't fail the entire request if email fails
         return False
-        
-    except Exception as e:
-        logger.error(f"Failed to send email notification: {str(e)}")
-        # Don't fail the entire request if email fails
-        return False
 
 # Contact Form Endpoints
 @api_router.post("/contact")
