@@ -65,10 +65,11 @@ class ContactMessageCreate(BaseModel):
     @classmethod
     def validate_phone(cls, v):
         if v is not None and v.strip():
-            # Slovak phone number format validation
-            phone_pattern = r'^\+421\d{9}$|^0\d{9}$'
+            # International phone number format validation
+            # Accepts: +X to +XXX (country code) followed by 4-15 digits
+            phone_pattern = r'^\+\d{1,3}\d{4,15}$'
             if not re.match(phone_pattern, v.strip()):
-                raise ValueError('Neplatný formát telefónneho čísla')
+                raise ValueError('Neplatný formát telefónneho čísla. Použite medzinárodný formát (napr. +421912345678)')
             return v.strip()
         return v
     
