@@ -119,16 +119,10 @@ async def get_status_checks():
     
     return status_checks
 
-# Email sending function
+# Email sending function using Resend
 async def send_email_notification(contact_data: ContactMessage):
-    """Send email notification when a new contact form is submitted"""
+    """Send email notification when a new contact form is submitted using Resend"""
     try:
-        # Create email message
-        message = MIMEMultipart('alternative')
-        message['Subject'] = f'Nová správa z kontaktného formulára - {contact_data.name}'
-        message['From'] = SMTP_FROM_EMAIL
-        message['To'] = SMTP_TO_EMAIL
-        
         # Create HTML email body
         html_body = f"""
         <html>
@@ -182,34 +176,23 @@ async def send_email_notification(contact_data: ContactMessage):
         </html>
         """
         
-        # Attach HTML body
-        html_part = MIMEText(html_body, 'html', 'utf-8')
-        message.attach(html_part)
+        # Send email using Resend
+        params = {
+            "from": f"FENJI Slovakia <{SENDER_EMAIL}>",
+            "to": [RECIPIENT_EMAIL],
+            "subject": f"Nová správa z kontaktného formulára - {contact_data.name}",
+            "html": html_body,
+        }
         
-        # Send email using STARTTLS (port 587) or SSL (port 465)
-        if SMTP_PORT == 587:
-            # Use STARTTLS for port 587
-            await aiosmtplib.send(
-                message,
-                hostname=SMTP_SERVER,
-                port=SMTP_PORT,
-                username=SMTP_USERNAME,
-                password=SMTP_PASSWORD,
-                start_tls=True,
-            )
-        else:
-            # Use SSL for port 465
-            await aiosmtplib.send(
-                message,
-                hostname=SMTP_SERVER,
-                port=SMTP_PORT,
-                username=SMTP_USERNAME,
-                password=SMTP_PASSWORD,
-                use_tls=True,
-            )
+        email = resend.Emails.send(params)
         
-        logger.info(f"Email notification sent successfully to {SMTP_TO_EMAIL}")
+        logger.info(f"Email notification sent successfully to {RECIPIENT_EMAIL} via Resend. ID: {email.get('id', 'N/A')}")
         return True
+        
+    except Exception as e:
+        logger.error(f"Failed to send email notification via Resend: {str(e)}")
+        # Don't fail the entire request if email fails
+        return False
         
     except Exception as e:
         logger.error(f"Failed to send email notification: {str(e)}")
