@@ -188,15 +188,27 @@ async def send_email_notification(contact_data: ContactMessage):
         html_part = MIMEText(html_body, 'html', 'utf-8')
         message.attach(html_part)
         
-        # Send email using SSL
-        await aiosmtplib.send(
-            message,
-            hostname=SMTP_SERVER,
-            port=SMTP_PORT,
-            username=SMTP_USERNAME,
-            password=SMTP_PASSWORD,
-            use_tls=True,
-        )
+        # Send email using STARTTLS (port 587) or SSL (port 465)
+        if SMTP_PORT == 587:
+            # Use STARTTLS for port 587
+            await aiosmtplib.send(
+                message,
+                hostname=SMTP_SERVER,
+                port=SMTP_PORT,
+                username=SMTP_USERNAME,
+                password=SMTP_PASSWORD,
+                start_tls=True,
+            )
+        else:
+            # Use SSL for port 465
+            await aiosmtplib.send(
+                message,
+                hostname=SMTP_SERVER,
+                port=SMTP_PORT,
+                username=SMTP_USERNAME,
+                password=SMTP_PASSWORD,
+                use_tls=True,
+            )
         
         logger.info(f"Email notification sent successfully to {SMTP_TO_EMAIL}")
         return True
