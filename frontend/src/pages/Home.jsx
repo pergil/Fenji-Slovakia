@@ -508,7 +508,7 @@ const Home = () => {
                   <Input
                     type="text"
                     name="name"
-                    placeholder="Vaše meno"
+                    placeholder="Vaše meno (povinné)"
                     value={formData.name}
                     onChange={handleInputChange}
                     required
@@ -519,7 +519,7 @@ const Home = () => {
                   <Input
                     type="email"
                     name="email"
-                    placeholder="Váš email"
+                    placeholder="Váš email (povinné)"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
@@ -530,7 +530,7 @@ const Home = () => {
                   <Input
                     type="tel"
                     name="phone"
-                    placeholder="Telefónne číslo"
+                    placeholder="Telefónne číslo (voliteľné)"
                     value={formData.phone}
                     onChange={handleInputChange}
                     className="rounded-xl"
@@ -539,7 +539,7 @@ const Home = () => {
                 <div>
                   <Textarea
                     name="message"
-                    placeholder="Vaša správa"
+                    placeholder="Vaša správa (povinné)"
                     value={formData.message}
                     onChange={handleInputChange}
                     required
